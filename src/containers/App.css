@@ -1,0 +1,13 @@
+div.header {
+    background-color: #302F2F;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+div.header h1 {
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+}

@@ -1,6 +1,7 @@
+<<<<<<< HEAD
 # vue-autocrud-table
 
-> A data table supporting full CRUD out of the box. Built with Vue.js
+> A self-managing editable data grid. Requires only a REST endpoint, supporting full CRUD out of the box. Built with Vue.js
 
 ## Build Setup
 
@@ -16,3 +17,4 @@ npm run build
 ```
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+

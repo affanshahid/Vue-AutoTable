@@ -1,29 +1,28 @@
 {
-  "name": "react-autocrud-table",
+  "name": "vue-autocrud-table",
+  "description": "A data table supporting full CRUD out of the box. Built with Vue.js",
   "version": "1.0.0",
-  "main": "build/index.html",
-  "license": "MIT",
+  "author": "Affan Shahid <affan.shahid.94@gmail.com>",
+  "private": true,
   "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server --watch"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "dependencies": {
+    "axios": "^0.17.0",
+    "lodash": "^4.17.4",
+    "vue": "^2.4.4"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
-    "file-loader": "^0.11.2",
-    "style-loader": "^0.18.2",
+    "file-loader": "^1.1.4",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.4.4",
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.8.2"
-  },
-  "dependencies": {
-    "babel-preset-stage-2": "^6.24.1",
-    "html-webpack-plugin": "^2.30.1",
-    "isomorphic-fetch": "^2.2.1",
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "webpack-dev-server": "^2.9.1"
   }
 }

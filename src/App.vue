@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <h1>Auto CRUD Table</h1>
+    <h1>Auto Table</h1>
     <div class="table-wrapper">
-      <auto-table url="http://59f8db64d4d1700012b76310.mockapi.io/users" ></auto-table>
+      <auto-table url="http://59f8db64d4d1700012b76310.mockapi.io/users" id="id"></auto-table>
     </div>
   </div>
 </template>

@@ -1,87 +1,31 @@
 <template>
-  <div class="ac-table">
+  <div class="auto-table">
     <table>
       <thead>
         <th v-bind:key="col" v-for="col of columns">{{col}}</th>
+        <th v-if="columns.length != 0">Actions</th>
       </thead>
       <tbody>
-        <tr v-bind:key="id ? datum[id] : index" v-for="(datum, index) of data">
-          <td v-bind:key="col" v-for="col of columns">{{datum[col]}}</td>
-        </tr>
+        <Row
+          v-for="(datum, index) of data" 
+          v-on:edit="editData"
+          v-on:delete="deleteData"
+          v-bind:key="datum[id]" 
+          v-bind:rowData="columns.map(c => datum[c])">
+        </Row>
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
-const mock = [
-  {
-    id: 1,
-    first_name: "Iolanthe",
-    last_name: "Titchard",
-    email: "ititchard0@tumblr.com"
-  },
-  {
-    id: 2,
-    first_name: "Allx",
-    last_name: "Illes",
-    email: "ailles1@fastcompany.com"
-  },
-  {
-    id: 3,
-    first_name: "Dorelle",
-    last_name: "Mudle",
-    email: "dmudle2@who.int"
-  },
-  {
-    id: 4,
-    first_name: "Charlene",
-    last_name: "Backsal",
-    email: "cbacksal3@rambler.ru"
-  },
-  {
-    id: 5,
-    first_name: "Matilda",
-    last_name: "Clemes",
-    email: "mclemes4@timesonline.co.uk"
-  },
-  {
-    id: 6,
-    first_name: "Maiga",
-    last_name: "Liptrod",
-    email: "mliptrod5@bloomberg.com"
-  },
-  {
-    id: 7,
-    first_name: "Devy",
-    last_name: "Jagoe",
-    email: "djagoe6@cbsnews.com"
-  },
-  {
-    id: 8,
-    first_name: "Nannie",
-    last_name: "Cottam",
-    email: "ncottam7@google.com.au"
-  },
-  {
-    id: 9,
-    first_name: "Efrem",
-    last_name: "Claussen",
-    email: "eclaussen8@hexun.com"
-  },
-  {
-    id: 10,
-    first_name: "Lynn",
-    last_name: "Langhorn",
-    email: "llanghorn9@sourceforge.net"
-  }
-];
-
+import Row from "./Row.vue";
 import debounce from "lodash/debounce";
-import { get } from "axios";
+import { get, put, delete as del } from "axios";
 
 export default {
   name: "auto-table",
+  components: { Row },
   props: {
     url: {
       type: String,
@@ -89,41 +33,112 @@ export default {
     },
     id: {
       type: String,
-      required: false
+      required: true
     }
   },
   data() {
     return {
-      data: mock
+      data: null
     };
   },
   computed: {
     columns() {
-      return (!this.data || this.data.length == 0) ? [] : Object.keys(this.data[0]);
+      return !this.data || this.data.length == 0
+        ? []
+        : Object.keys(this.data[0]);
     }
   },
   watch: {
-    url() {
-      // debounce(fetchData, 1000)
-      fetchData();
+    url: {
+      immediate: true,
+      handler() {
+        this.fetchData();
+      }
     }
   },
   methods: {
     fetchData: async function() {
+      console.log("Refreshing...");
       try {
         const response = await get(this.url);
         this.data = response.data;
       } catch (err) {
         console.error(err);
       }
+    },
+    async editData(data) {
+      const payload = this.columns.reduce((res, c, i) => {
+        if (c != this.id) res[c] = data[i];
+        return res;
+      }, {});
+
+      try {
+        await put(
+          `${this.url}/${data[this.columns.indexOf(this.id)]}`,
+          payload
+        );
+        this.fetchData();
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async deleteData(data) {
+      try {
+        await del(`${this.url}/${data[this.columns.indexOf(this.id)]}`);
+        this.fetchData();
+      } catch (err) {
+        console.error(err);
+      }
     }
-  },
-  mounted() {
-    this.fetchData();
   }
 };
 </script>
 
-<style>
+<style scoped>
+.auto-table > table {
+  background: white;
+  border-radius: 3px;
+  border-collapse: collapse;
+  height: 320px;
+  margin: auto;
+  max-width: 600px;
+  padding: 5px;
+  width: 100%;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
 
+.auto-table th {
+  text-transform: uppercase;
+  color: #d5dde5;
+  background: #1b1e24;
+  border-bottom: 4px solid #42b983;
+  border-right: 1px solid #343a45;
+  font-size: 14px;
+  font-weight: 100;
+  padding: 12px;
+  text-align: left;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  vertical-align: middle;
+}
+
+.auto-table th:first-child {
+  border-top-left-radius: 3px;
+}
+
+.auto-table th:last-child {
+  border-top-right-radius: 3px;
+  border-right: none;
+}
+
+.auto-table th.text-left {
+  text-align: left;
+}
+
+.auto-table th.text-center {
+  text-align: center;
+}
+
+.auto-table th.text-right {
+  text-align: right;
+}
 </style>

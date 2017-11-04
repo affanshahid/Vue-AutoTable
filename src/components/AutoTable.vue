@@ -80,6 +80,7 @@ export default {
         this.fetchData();
       } catch (err) {
         console.error(err);
+        this.fetchData();
       }
     },
     async deleteData(data) {
